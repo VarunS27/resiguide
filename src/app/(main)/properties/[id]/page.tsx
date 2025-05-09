@@ -9,7 +9,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { MapPin, BedDouble, Bath, Landmark, CheckCircle, Mail, Phone, ArrowLeft } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { PageHeader } from '@/components/ui/page-header';
-import { AgentCardSmall } from '@/components/agent-card-small'; // New component
+import { AgentCardSmall } from '@/components/agent-card-small';
 
 export default function PropertyDetailPage({ params }: { params: { id: string } }) {
   const property = DUMMY_PROPERTIES.find((p) => p.id === params.id);
@@ -40,7 +40,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column: Image and Key Details */}
           <div className="lg:col-span-2">
-            <Card className="overflow-hidden shadow-xl rounded-lg">
+            <Card className="overflow-hidden shadow-xl rounded-lg animate-fade-in">
               <AspectRatio ratio={16 / 9}>
                 <Image
                   src={property.image}
@@ -52,7 +52,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 />
               </AspectRatio>
               <CardContent className="p-6">
-                <div className="flex flex-wrap gap-4 mb-6 text-muted-foreground">
+                <div className="flex flex-wrap gap-4 mb-6 text-muted-foreground animate-fade-in-up animation-delay-100">
                   <div className="flex items-center">
                     <MapPin className="w-5 h-5 mr-2 text-primary" />
                     <span>{property.location}</span>
@@ -73,23 +73,27 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 
                 <Separator className="my-6" />
 
-                <h2 className="text-2xl font-semibold text-primary mb-4">Property Description</h2>
-                <p className="text-foreground/90 leading-relaxed whitespace-pre-line">
-                  {property.description}
-                </p>
+                <div className="animate-fade-in-up animation-delay-200">
+                  <h2 className="text-2xl font-semibold text-primary mb-4">Property Description</h2>
+                  <p className="text-foreground/90 leading-relaxed whitespace-pre-line">
+                    {property.description}
+                  </p>
+                </div>
 
                 {property.amenities && property.amenities.length > 0 && (
                   <>
                     <Separator className="my-6" />
-                    <h2 className="text-2xl font-semibold text-primary mb-4">Amenities</h2>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
-                      {property.amenities.map((amenity) => (
-                        <li key={amenity} className="flex items-center text-foreground/90">
-                          <CheckCircle className="w-5 h-5 mr-2 text-accent flex-shrink-0" />
-                          {amenity}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="animate-fade-in-up animation-delay-300">
+                      <h2 className="text-2xl font-semibold text-primary mb-4">Amenities</h2>
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
+                        {property.amenities.map((amenity) => (
+                          <li key={amenity} className="flex items-center text-foreground/90">
+                            <CheckCircle className="w-5 h-5 mr-2 text-accent flex-shrink-0" />
+                            {amenity}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </>
                 )}
               </CardContent>
@@ -98,7 +102,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
 
           {/* Right Column: Price, Agent, Contact */}
           <div className="lg:col-span-1 space-y-8">
-            <Card className="shadow-xl rounded-lg">
+            <Card className="shadow-xl rounded-lg animate-fade-in-up">
               <CardHeader>
                 <CardTitle className="text-2xl text-accent">
                   ${property.price.toLocaleString()}
@@ -109,20 +113,22 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </Badge>
               </CardHeader>
               <CardContent>
-                <Button size="lg" className="w-full mb-2">
+                <Button size="lg" className="w-full mb-2 transition-transform hover:scale-105">
                   <Mail className="mr-2 h-5 w-5" /> Inquire About Property
                 </Button>
-                <Button size="lg" variant="outline" className="w-full">
+                <Button size="lg" variant="outline" className="w-full transition-transform hover:scale-105">
                   <Phone className="mr-2 h-5 w-5" /> Schedule a Visit
                 </Button>
               </CardContent>
             </Card>
 
             {agent && (
-              <AgentCardSmall agent={agent} />
+              <div className="animate-fade-in-up animation-delay-200">
+                <AgentCardSmall agent={agent} />
+              </div>
             )}
             
-            <Card className="shadow-xl rounded-lg">
+            <Card className="shadow-xl rounded-lg animate-fade-in-up animation-delay-400">
               <CardHeader>
                 <CardTitle className="text-xl text-primary">Location Map</CardTitle>
               </CardHeader>

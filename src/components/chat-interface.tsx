@@ -85,7 +85,7 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-10rem)] max-w-3xl mx-auto bg-card shadow-2xl rounded-lg border">
+    <div className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-10rem)] max-w-3xl mx-auto bg-card shadow-2xl rounded-lg border animate-fade-in-up">
       <header className="p-4 border-b flex items-center bg-primary text-primary-foreground rounded-t-lg">
         <MessageSquare className="h-6 w-6 mr-2" />
         <h2 className="text-lg font-semibold">AI Real Estate Assistant</h2>
@@ -95,7 +95,7 @@ export function ChatInterface() {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex items-end space-x-2 ${
+            className={`flex items-end space-x-2 animate-pop-in ${
               msg.sender === 'user' ? 'justify-end' : ''
             }`}
           >
@@ -126,7 +126,7 @@ export function ChatInterface() {
           </div>
         ))}
         {isLoading && (
-          <div className="flex items-end space-x-2">
+          <div className="flex items-end space-x-2 animate-pop-in">
             <Avatar className="h-8 w-8">
               <AvatarImage src="/ai-avatar.png" alt="AI Avatar" />
               <AvatarFallback>AI</AvatarFallback>

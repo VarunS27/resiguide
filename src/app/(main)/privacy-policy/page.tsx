@@ -12,7 +12,7 @@ export default function PrivacyPolicyPage() {
         ]}
       />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto bg-card p-8 rounded-lg shadow-lg">
+        <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto bg-card p-8 rounded-lg shadow-lg animate-fade-in-up">
           <h2>1. Introduction</h2>
           <p>
             Welcome to ResiGuide. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us.

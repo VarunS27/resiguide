@@ -11,25 +11,31 @@ export function FeaturedProperties() {
     <section className="py-16 lg:py-24 bg-background animate-fade-in-up animation-delay-500">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-primary">
+          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-primary animate-fade-in-down">
             Featured Properties
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-down animation-delay-200">
             Explore our handpicked selection of premium properties, offering luxury, comfort, and style.
           </p>
         </div>
         
         {featured.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featured.map((property) => (
-              <PropertyCard key={property.id} property={property} />
+            {featured.map((property, index) => (
+              <div 
+                key={property.id} 
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${index * 150 + 400}ms` }} // Staggered delay
+              >
+                <PropertyCard property={property} />
+              </div>
             ))}
           </div>
         ) : (
-          <p className="text-center text-muted-foreground">No featured properties available at the moment. Please check back later.</p>
+          <p className="text-center text-muted-foreground animate-fade-in">No featured properties available at the moment. Please check back later.</p>
         )}
 
-        <div className="mt-12 text-center">
+        <div className="mt-12 text-center animate-fade-in-up animation-delay-700">
           <Button asChild size="lg" variant="outline" className="text-primary border-primary hover:bg-primary hover:text-primary-foreground group">
             <Link href="/properties">
               View All Properties

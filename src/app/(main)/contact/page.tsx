@@ -21,7 +21,7 @@ export default function ContactPage() {
         <div className="grid lg:grid-cols-3 gap-12">
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <Card className="shadow-xl rounded-lg">
+            <Card className="shadow-xl rounded-lg animate-fade-in-left">
               <CardHeader>
                 <CardTitle className="text-2xl text-primary">Send Us a Message</CardTitle>
               </CardHeader>
@@ -33,7 +33,7 @@ export default function ContactPage() {
 
           {/* Contact Details */}
           <div className="lg:col-span-1 space-y-8">
-            <Card className="shadow-xl rounded-lg">
+            <Card className="shadow-xl rounded-lg animate-fade-in-right animation-delay-100">
               <CardHeader>
                 <CardTitle className="text-xl text-primary">Contact Information</CardTitle>
               </CardHeader>
@@ -62,7 +62,7 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-xl rounded-lg">
+            <Card className="shadow-xl rounded-lg animate-fade-in-right animation-delay-200">
               <CardHeader>
                 <CardTitle className="text-xl text-primary">Connect With Us</CardTitle>
               </CardHeader>
@@ -70,7 +70,7 @@ export default function ContactPage() {
                 <p className="text-sm text-muted-foreground mb-4">Follow us on social media for the latest updates and listings.</p>
                 <div className="flex space-x-3">
                   {SOCIAL_LINKS.map(link => (
-                    <Button key={link.name} variant="outline" size="icon" asChild className="hover:border-accent hover:text-accent">
+                    <Button key={link.name} variant="outline" size="icon" asChild className="hover:border-accent hover:text-accent transition-all hover:scale-110">
                       <Link href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.name}>
                         <link.icon className="h-5 w-5" />
                       </Link>
@@ -80,7 +80,7 @@ export default function ContactPage() {
               </CardContent>
             </Card>
             
-            <Card className="shadow-xl rounded-lg">
+            <Card className="shadow-xl rounded-lg animate-fade-in-right animation-delay-300">
               <CardHeader>
                 <CardTitle className="text-xl text-primary">Find Us Here</CardTitle>
               </CardHeader>

@@ -12,7 +12,7 @@ export default function TermsOfServicePage() {
         ]}
       />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto bg-card p-8 rounded-lg shadow-lg">
+        <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto bg-card p-8 rounded-lg shadow-lg animate-fade-in-up">
           <h2>1. Agreement to Terms</h2>
           <p>
             By using our services, you agree to be bound by these Terms. If you disagree with any part of the terms, then you do not have permission to access the service.
@@ -33,7 +33,7 @@ export default function TermsOfServicePage() {
 
           <h2>3. Intellectual Property</h2>
           <p>
-            The Service and its original content, features and functionality are and will remain the exclusive property of ResiGuide and its licensors. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of ResiGuide.
+            The Service and its original content, features and functionality are and will remain the exclusive property of ResiGuide and its licensors. Our trademarks and trade dress may not be used in connection with any product or service without spinster prior written consent of ResiGuide.
           </p>
 
           <h2>4. User Content</h2>
