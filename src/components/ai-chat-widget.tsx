@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -28,8 +29,8 @@ export function AIChatWidget() {
       </Button>
 
       {isOpen && (
-        <div className="fixed bottom-[calc(3.5rem+1.5rem+1rem)] right-6 z-50 w-full max-w-sm animate-fade-in-up animation-delay-0"> {/* Adjusted bottom positioning */}
-          <Card className="h-[500px] shadow-2xl rounded-lg flex flex-col overflow-hidden border">
+        <div className="fixed bottom-[calc(3.5rem+1.5rem+1rem)] right-6 z-50 w-full max-w-sm animate-fade-in-up"> {/* Adjusted bottom positioning & ensured animation */}
+          <Card className="h-[450px] shadow-2xl rounded-lg flex flex-col overflow-hidden border animate-pop-in animation-delay-100">
             <CardHeader className="flex flex-row items-center justify-between p-3 border-b bg-card">
               <CardTitle className="text-base font-semibold text-card-foreground">AI Assistant</CardTitle>
               <Button variant="ghost" size="icon" onClick={toggleChat} aria-label="Close chat" className="h-7 w-7">
@@ -45,3 +46,4 @@ export function AIChatWidget() {
     </>
   );
 }
+

@@ -1,3 +1,4 @@
+
 import { PageHeader } from '@/components/ui/page-header';
 
 export default function PrivacyPolicyPage() {
@@ -11,8 +12,8 @@ export default function PrivacyPolicyPage() {
           { label: 'Privacy Policy' },
         ]}
       />
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto bg-card p-8 rounded-lg shadow-lg animate-fade-in-up">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-4xl mx-auto bg-card p-6 sm:p-8 rounded-lg shadow-lg animate-fade-in-up animation-delay-200">
           <h2>1. Introduction</h2>
           <p>
             Welcome to ResiGuide. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us.
@@ -70,9 +71,10 @@ export default function PrivacyPolicyPage() {
           <p>
             If you have questions or comments about this notice, you may email us at contact@resiguide.com.
           </p>
-          <p className="text-sm text-muted-foreground">Last updated: {new Date().toLocaleDateString()}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground">Last updated: {new Date().toLocaleDateString()}</p>
         </div>
       </div>
     </div>
   );
 }
+

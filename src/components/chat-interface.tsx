@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -8,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, MessageSquare, User, Loader2 } from 'lucide-react';
 import { aiChatbotAssistant, type AIChatbotAssistantInput, type AIChatbotAssistantOutput } from '@/ai/flows/ai-chatbot-assistant';
 import { APP_NAME } from '@/lib/constants';
+import Image from 'next/image';
 
 interface Message {
   id: string;
@@ -25,17 +27,14 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [aiAvatarUrl, setAiAvatarUrl] = useState('');
+  const [userAvatarUrl, setUserAvatarUrl] = useState('');
 
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      const viewport = scrollAreaRef.current.querySelector('div[data-radix-scroll-area-viewport]');
-      if (viewport) {
-        viewport.scrollTop = viewport.scrollHeight;
-      }
-    }
-  }, [messages]);
-  
-  useEffect(() => {
+    // Generate dynamic placeholder images only on the client
+    setAiAvatarUrl('https://picsum.photos/seed/ai-avatar/40/40');
+    setUserAvatarUrl('https://picsum.photos/seed/user-avatar/40/40');
+
     setMessages([
       {
         id: Date.now().toString(),
@@ -46,6 +45,16 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
     ]);
   }, []);
 
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const viewport = scrollAreaRef.current.querySelector('div[data-radix-scroll-area-viewport]');
+      if (viewport) {
+        viewport.scrollTop = viewport.scrollHeight;
+      }
+    }
+  }, [messages]);
+  
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,28 +106,28 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
   return (
     <div className={containerClass}>
       {variant === 'page' && (
-        <header className="p-4 border-b flex items-center bg-primary text-primary-foreground rounded-t-lg">
+        <header className="p-4 border-b flex items-center bg-primary text-primary-foreground rounded-t-lg animate-fade-in-down">
           <MessageSquare className="h-6 w-6 mr-2" />
           <h2 className="text-lg font-semibold">AI Real Estate Assistant</h2>
         </header>
       )}
 
       <ScrollArea className="flex-grow p-4 space-y-4" ref={scrollAreaRef}>
-        {messages.map((msg) => (
+        {messages.map((msg, index) => (
           <div
             key={msg.id}
-            className={`flex items-end space-x-2 animate-pop-in ${
+            className={`flex items-end space-x-2 animate-pop-in animation-delay-${index === 0 ? '0' : '100'} ${
               msg.sender === 'user' ? 'justify-end' : ''
             }`}
           >
             {msg.sender === 'ai' && (
               <Avatar className="h-8 w-8">
-                <AvatarImage src="/ai-avatar.png" alt="AI Avatar" data-ai-hint="robot face" />
+                {aiAvatarUrl && <AvatarImage src={aiAvatarUrl} alt="AI Avatar" data-ai-hint="robot face" />}
                 <AvatarFallback>AI</AvatarFallback>
               </Avatar>
             )}
             <div
-              className={`max-w-[75%] p-3 rounded-lg shadow ${ // Adjusted max-width slightly for widget
+              className={`max-w-[75%] p-3 rounded-lg shadow ${
                 msg.sender === 'user'
                   ? 'bg-primary text-primary-foreground rounded-br-none'
                   : 'bg-secondary text-secondary-foreground rounded-bl-none'
@@ -131,16 +140,16 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
             </div>
             {msg.sender === 'user' && (
               <Avatar className="h-8 w-8">
-                 <AvatarImage src="/user-avatar.png" alt="User Avatar" data-ai-hint="person silhouette" />
+                 {userAvatarUrl && <AvatarImage src={userAvatarUrl} alt="User Avatar" data-ai-hint="person silhouette" />}
                 <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
               </Avatar>
             )}
           </div>
         ))}
         {isLoading && (
-          <div className="flex items-end space-x-2 animate-pop-in">
+          <div className="flex items-end space-x-2 animate-pop-in animation-delay-100">
             <Avatar className="h-8 w-8">
-              <AvatarImage src="/ai-avatar.png" alt="AI Avatar" />
+              {aiAvatarUrl && <AvatarImage src={aiAvatarUrl} alt="AI Avatar" />}
               <AvatarFallback>AI</AvatarFallback>
             </Avatar>
             <div className="max-w-[70%] p-3 rounded-lg shadow bg-secondary text-secondary-foreground rounded-bl-none">
@@ -150,13 +159,13 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
         )}
       </ScrollArea>
 
-      <form onSubmit={handleSendMessage} className={formClass}>
+      <form onSubmit={handleSendMessage} className={`${formClass} animate-fade-in-up animation-delay-200`}>
         <Input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask a question..."
-          className="flex-grow h-10" // Adjusted height slightly
+          className="flex-grow h-10" 
           disabled={isLoading}
           aria-label="Chat input"
         />
@@ -168,3 +177,4 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
     </div>
   );
 }
+

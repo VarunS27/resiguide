@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { APP_NAME, NAV_LINKS, CONTACT_EMAIL, CONTACT_PHONE, COMPANY_ADDRESS } from '@/lib/constants';
 import { SocialLinks } from '@/components/social-links';
@@ -10,10 +11,10 @@ export function Footer() {
 
 
   return (
-    <footer className="bg-secondary text-secondary-foreground/80">
+    <footer className="bg-secondary text-secondary-foreground/80 animate-fade-in-up animation-delay-300">
       <div className="container mx-auto max-w-screen-2xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 items-start">
+          <div className="animate-fade-in-left animation-delay-400">
             <Link href="/" className="flex items-center space-x-2 mb-4">
               <Building2 className="h-8 w-8 text-primary" />
               <span className="text-2xl font-bold text-primary tracking-tight">{APP_NAME}</span>
@@ -24,8 +25,8 @@ export function Footer() {
             <SocialLinks className="mt-6 -ml-2" />
           </div>
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-3">
-            <div>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-3 md:col-span-1">
+            <div className="animate-fade-in-up animation-delay-500">
               <p className="font-semibold text-secondary-foreground">Quick Links</p>
               <ul className="mt-4 space-y-2 text-sm">
                 {footerNavLinks.map((link) => (
@@ -43,7 +44,7 @@ export function Footer() {
               </ul>
             </div>
 
-            <div>
+            <div className="animate-fade-in-up animation-delay-600">
               <p className="font-semibold text-secondary-foreground">Legal</p>
               <ul className="mt-4 space-y-2 text-sm">
                 <li>
@@ -59,7 +60,7 @@ export function Footer() {
               </ul>
             </div>
             
-            <div>
+            <div className="animate-fade-in-right animation-delay-700">
               <p className="font-semibold text-secondary-foreground">Contact Us</p>
               <ul className="mt-4 space-y-3 text-sm">
                 <li className="flex items-start">
@@ -79,9 +80,9 @@ export function Footer() {
           </div>
         </div>
         
-        <Separator className="my-8 bg-border/50" />
+        <Separator className="my-8 bg-border/50 animate-fade-in animation-delay-800" />
 
-        <div className="text-center text-xs">
+        <div className="text-center text-xs animate-fade-in-up animation-delay-900">
           <p>&copy; {year} {APP_NAME}. All rights reserved. Designed with elegance.</p>
         </div>
       </div>
@@ -92,3 +93,4 @@ export function Footer() {
 // Placeholder pages for legal links - create these files if they don't exist
 // src/app/(main)/privacy-policy/page.tsx
 // src/app/(main)/terms-of-service/page.tsx
+
