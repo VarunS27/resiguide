@@ -1,5 +1,5 @@
 import type { NavLink, Property, Agent, BlogPost, SocialLink } from './types';
-import { LayoutDashboard, Home, Users, FileText, MessageSquare, Phone, Facebook, Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
+import { LayoutDashboard, Home, Users, FileText, Phone, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'; // Removed MessageSquare
 
 export const APP_NAME = 'ResiGuide';
 
@@ -8,7 +8,7 @@ export const NAV_LINKS: NavLink[] = [
   { href: '/properties', label: 'Properties', icon: Home },
   { href: '/agents', label: 'Agents', icon: Users },
   { href: '/blog', label: 'Blog', icon: FileText },
-  { href: '/chat', label: 'AI Assistant', icon: MessageSquare },
+  // { href: '/chat', label: 'AI Assistant', icon: MessageSquare }, // Removed AI Assistant
   { href: '/contact', label: 'Contact', icon: Phone },
 ];
 

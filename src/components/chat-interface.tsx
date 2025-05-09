@@ -16,14 +16,17 @@ interface Message {
   timestamp: Date;
 }
 
-export function ChatInterface() {
+interface ChatInterfaceProps {
+  variant?: 'page' | 'widget';
+}
+
+export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Scroll to bottom when new messages are added
     if (scrollAreaRef.current) {
       const viewport = scrollAreaRef.current.querySelector('div[data-radix-scroll-area-viewport]');
       if (viewport) {
@@ -33,7 +36,6 @@ export function ChatInterface() {
   }, [messages]);
   
   useEffect(() => {
-    // Initial greeting message from AI
     setMessages([
       {
         id: Date.now().toString(),
@@ -84,12 +86,22 @@ export function ChatInterface() {
     }
   };
 
+  const containerClass = variant === 'widget'
+    ? "flex flex-col h-full"
+    : "flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-10rem)] max-w-3xl mx-auto bg-card shadow-2xl rounded-lg border animate-fade-in-up";
+
+  const formClass = variant === 'widget'
+    ? "p-3 border-t flex items-center space-x-2 bg-background"
+    : "p-4 border-t flex items-center space-x-2 bg-background rounded-b-lg";
+
   return (
-    <div className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-10rem)] max-w-3xl mx-auto bg-card shadow-2xl rounded-lg border animate-fade-in-up">
-      <header className="p-4 border-b flex items-center bg-primary text-primary-foreground rounded-t-lg">
-        <MessageSquare className="h-6 w-6 mr-2" />
-        <h2 className="text-lg font-semibold">AI Real Estate Assistant</h2>
-      </header>
+    <div className={containerClass}>
+      {variant === 'page' && (
+        <header className="p-4 border-b flex items-center bg-primary text-primary-foreground rounded-t-lg">
+          <MessageSquare className="h-6 w-6 mr-2" />
+          <h2 className="text-lg font-semibold">AI Real Estate Assistant</h2>
+        </header>
+      )}
 
       <ScrollArea className="flex-grow p-4 space-y-4" ref={scrollAreaRef}>
         {messages.map((msg) => (
@@ -106,7 +118,7 @@ export function ChatInterface() {
               </Avatar>
             )}
             <div
-              className={`max-w-[70%] p-3 rounded-lg shadow ${
+              className={`max-w-[75%] p-3 rounded-lg shadow ${ // Adjusted max-width slightly for widget
                 msg.sender === 'user'
                   ? 'bg-primary text-primary-foreground rounded-br-none'
                   : 'bg-secondary text-secondary-foreground rounded-bl-none'
@@ -138,17 +150,17 @@ export function ChatInterface() {
         )}
       </ScrollArea>
 
-      <form onSubmit={handleSendMessage} className="p-4 border-t flex items-center space-x-2 bg-background rounded-b-lg">
+      <form onSubmit={handleSendMessage} className={formClass}>
         <Input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask a real estate question..."
-          className="flex-grow h-11"
+          placeholder="Ask a question..."
+          className="flex-grow h-10" // Adjusted height slightly
           disabled={isLoading}
           aria-label="Chat input"
         />
-        <Button type="submit" size="icon" className="h-11 w-11" disabled={isLoading || input.trim() === ''}>
+        <Button type="submit" size="icon" className="h-10 w-10" disabled={isLoading || input.trim() === ''}>
           {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
           <span className="sr-only">Send Message</span>
         </Button>
