@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, MessageSquare, User, Loader2 } from 'lucide-react';
 import { aiChatbotAssistant, type AIChatbotAssistantInput, type AIChatbotAssistantOutput } from '@/ai/flows/ai-chatbot-assistant';
 import { APP_NAME } from '@/lib/constants';
-import Image from 'next/image';
+import Image from 'next/image'; // Keep Image for potential future use, even if Avatars use picsum
 
 interface Message {
   id: string;
@@ -38,7 +38,7 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
     setMessages([
       {
         id: Date.now().toString(),
-        text: `Hello! I'm the ${APP_NAME} AI Assistant. How can I help you with your real estate questions today?`,
+        text: `Hello! I'm the ${APP_NAME} AI Assistant. How can I help you with your real estate questions or navigating our site today?`,
         sender: 'ai',
         timestamp: new Date(),
       }
@@ -74,9 +74,18 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
       const aiInput: AIChatbotAssistantInput = { query: userMessage.text };
       const aiOutput: AIChatbotAssistantOutput = await aiChatbotAssistant(aiInput);
       
+      let aiResponseText = aiOutput.response;
+      if (aiOutput.isRelevant && aiOutput.guidance) {
+        aiResponseText = `${aiOutput.response}\n\n${aiOutput.guidance}`;
+      } else if (!aiOutput.isRelevant) {
+        // The response should already be a polite refusal if not relevant, as per the prompt.
+        aiResponseText = aiOutput.response;
+      }
+
+
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: aiOutput.response,
+        text: aiResponseText,
         sender: 'ai',
         timestamp: new Date(),
       };
@@ -112,22 +121,22 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
         </header>
       )}
 
-      <ScrollArea className="flex-grow p-4 space-y-4" ref={scrollAreaRef}>
+      <ScrollArea className="flex-grow p-4 space-y-0" ref={scrollAreaRef}> {/* Changed space-y-4 to space-y-0, margins on individual messages now */}
         {messages.map((msg, index) => (
           <div
             key={msg.id}
-            className={`flex items-end space-x-2 animate-pop-in animation-delay-${index === 0 ? '0' : '100'} ${
+            className={`flex items-end space-x-2 animate-pop-in animation-delay-${index === 0 ? '0' : '100'} mb-4 ${ // Added mb-4 for spacing
               msg.sender === 'user' ? 'justify-end' : ''
             }`}
           >
             {msg.sender === 'ai' && (
-              <Avatar className="h-8 w-8">
+              <Avatar className="h-8 w-8 flex-shrink-0">
                 {aiAvatarUrl && <AvatarImage src={aiAvatarUrl} alt="AI Avatar" data-ai-hint="robot face" />}
                 <AvatarFallback>AI</AvatarFallback>
               </Avatar>
             )}
             <div
-              className={`max-w-[75%] p-3 rounded-lg shadow ${
+              className={`max-w-[75%] p-3 rounded-lg shadow-md ${ // Added shadow-md for better visibility
                 msg.sender === 'user'
                   ? 'bg-primary text-primary-foreground rounded-br-none'
                   : 'bg-secondary text-secondary-foreground rounded-bl-none'
@@ -139,7 +148,7 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
               </p>
             </div>
             {msg.sender === 'user' && (
-              <Avatar className="h-8 w-8">
+              <Avatar className="h-8 w-8 flex-shrink-0">
                  {userAvatarUrl && <AvatarImage src={userAvatarUrl} alt="User Avatar" data-ai-hint="person silhouette" />}
                 <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
               </Avatar>
@@ -147,12 +156,12 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
           </div>
         ))}
         {isLoading && (
-          <div className="flex items-end space-x-2 animate-pop-in animation-delay-100">
-            <Avatar className="h-8 w-8">
+          <div className="flex items-end space-x-2 animate-pop-in animation-delay-100 mb-4"> {/* Added mb-4 */}
+            <Avatar className="h-8 w-8 flex-shrink-0">
               {aiAvatarUrl && <AvatarImage src={aiAvatarUrl} alt="AI Avatar" />}
               <AvatarFallback>AI</AvatarFallback>
             </Avatar>
-            <div className="max-w-[70%] p-3 rounded-lg shadow bg-secondary text-secondary-foreground rounded-bl-none">
+            <div className="max-w-[70%] p-3 rounded-lg shadow-md bg-secondary text-secondary-foreground rounded-bl-none">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           </div>

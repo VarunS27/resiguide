@@ -29,7 +29,7 @@ export function AIChatWidget() {
       </Button>
 
       {isOpen && (
-        <div className="fixed bottom-[calc(3.5rem+1.5rem+1rem)] right-6 z-50 w-full max-w-sm animate-fade-in-up"> {/* Adjusted bottom positioning & ensured animation */}
+        <div className="fixed bottom-[calc(3.5rem+1.5rem+1rem)] right-6 z-50 w-[calc(100%-3rem)] sm:w-full max-w-sm animate-fade-in-up"> {/* Adjusted width for mobile, sm:w-full allows max-w-sm to take effect on sm+ screens */}
           <Card className="h-[450px] shadow-2xl rounded-lg flex flex-col overflow-hidden border animate-pop-in animation-delay-100">
             <CardHeader className="flex flex-row items-center justify-between p-3 border-b bg-card">
               <CardTitle className="text-base font-semibold text-card-foreground">AI Assistant</CardTitle>
