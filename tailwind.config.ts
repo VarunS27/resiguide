@@ -123,6 +123,7 @@ export default {
   },
   plugins: [
     require("tailwindcss-animate"),
+    require('tailwind-scrollbar')({ nocompatible: true }),
     plugin(function({ addUtilities }) {
       addUtilities({
         '.animation-delay-100': { 'animation-delay': '0.1s' },
@@ -133,7 +134,9 @@ export default {
         '.animation-delay-600': { 'animation-delay': '0.6s' },
         '.animation-delay-700': { 'animation-delay': '0.7s' },
         '.animation-delay-800': { 'animation-delay': '0.8s' },
+        '.animation-delay-900': { 'animation-delay': '0.9s' },
         '.animation-delay-1000': { 'animation-delay': '1s' },
+        '.animation-delay-1100': { 'animation-delay': '1.1s' },
       })
     })
   ],
