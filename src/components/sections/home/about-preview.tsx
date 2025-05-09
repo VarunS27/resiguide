@@ -6,7 +6,7 @@ import { ArrowRight, CheckCircle } from 'lucide-react';
 
 export function AboutPreview() {
   return (
-    <section className="py-16 lg:py-24 bg-secondary">
+    <section className="py-16 lg:py-24 bg-secondary animate-fade-in-up animation-delay-700">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="order-2 lg:order-1">

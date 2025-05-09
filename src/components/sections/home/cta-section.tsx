@@ -4,7 +4,7 @@ import { MessageSquare, Phone } from 'lucide-react';
 
 export function CtaSection() {
   return (
-    <section className="py-16 lg:py-24 bg-background">
+    <section className="py-16 lg:py-24 bg-background animate-fade-in-up animation-delay-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-primary mb-6">
           Ready to Find Your Perfect Property?

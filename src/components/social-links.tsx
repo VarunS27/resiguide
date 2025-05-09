@@ -10,9 +10,9 @@ export function SocialLinks({ className }: SocialLinksProps) {
   return (
     <div className={`flex items-center space-x-2 ${className}`}>
       {SOCIAL_LINKS.map((social) => (
-        <Button key={social.name} variant="ghost" size="icon" asChild>
+        <Button key={social.name} variant="ghost" size="icon" asChild className="group">
           <Link href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.name}>
-            <social.icon className="h-5 w-5 text-foreground/70 hover:text-primary" />
+            <social.icon className="h-5 w-5 text-foreground/70 group-hover:text-primary group-hover:scale-110 transition-all duration-150" />
           </Link>
         </Button>
       ))}

@@ -13,7 +13,7 @@ interface BlogPostCardProps {
 
 export function BlogPostCard({ post }: BlogPostCardProps) {
   return (
-    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full rounded-lg">
+    <Card className="group overflow-hidden shadow-lg flex flex-col h-full rounded-lg transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-2xl">
       {post.image && (
         <CardHeader className="p-0 relative">
           <Link href={`/blog/${post.slug}`} className="block aspect-video">

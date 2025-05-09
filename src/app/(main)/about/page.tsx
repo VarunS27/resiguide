@@ -24,16 +24,16 @@ export default function AboutPage() {
         <section className="mb-16">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">Our Mission</h2>
-              <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+              <h2 className="text-3xl font-bold text-primary mb-4 animate-fade-in-down">Our Mission</h2>
+              <p className="text-lg text-muted-foreground mb-6 leading-relaxed animate-fade-in-down animation-delay-200">
                 To redefine the real estate experience through integrity, expertise, and unwavering dedication to our clients' success. We strive to provide personalized service and innovative solutions, making every property transaction seamless and rewarding.
               </p>
-              <h2 className="text-3xl font-bold text-primary mb-4">Our Vision</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <h2 className="text-3xl font-bold text-primary mb-4 animate-fade-in-down animation-delay-300">Our Vision</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed animate-fade-in-down animation-delay-400">
                 To be the most trusted and respected real estate brokerage, known for our exceptional client outcomes, community engagement, and fostering long-term relationships built on transparency and mutual respect.
               </p>
             </div>
-            <div className="relative aspect-video rounded-lg overflow-hidden shadow-xl">
+            <div className="relative aspect-video rounded-lg overflow-hidden shadow-xl animate-fade-in">
               <Image 
                 src="https://picsum.photos/seed/aboutmission/600/400" 
                 alt="Our Mission" 
@@ -48,8 +48,8 @@ export default function AboutPage() {
         {/* Our Values Section */}
         <section className="mb-16 py-12 bg-secondary rounded-lg">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-primary">Our Core Values</h2>
-            <p className="mt-2 text-lg text-secondary-foreground max-w-xl mx-auto">The principles that guide everything we do.</p>
+            <h2 className="text-3xl font-bold text-primary animate-fade-in-down">Our Core Values</h2>
+            <p className="mt-2 text-lg text-secondary-foreground max-w-xl mx-auto animate-fade-in-down animation-delay-200">The principles that guide everything we do.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
             {[
@@ -57,8 +57,12 @@ export default function AboutPage() {
               { icon: Users, title: 'Client-Centric', description: 'Our clients are at the heart of everything we do.' },
               { icon: Target, title: 'Integrity', description: 'We operate with honesty, transparency, and ethical conduct.' },
               { icon: CheckCircle, title: 'Innovation', description: 'Embracing new ideas and technologies to serve you better.' },
-            ].map(value => (
-              <Card key={value.title} className="text-center bg-background shadow-md hover:shadow-lg transition-shadow">
+            ].map((value, index) => (
+              <Card 
+                key={value.title} 
+                className={`text-center bg-background shadow-md transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-xl animate-fade-in-up`}
+                style={{ animationDelay: `${(index * 100) + 300}ms` }}
+              >
                 <CardHeader>
                   <div className="mx-auto bg-accent/20 text-accent p-3 rounded-full w-fit mb-3">
                     <value.icon className="w-8 h-8" />
@@ -76,12 +80,16 @@ export default function AboutPage() {
         {/* Team Section Preview */}
         <section className="mb-16">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-primary">Meet Our Leadership</h2>
-             <p className="mt-2 text-lg text-muted-foreground max-w-xl mx-auto">A glimpse of the dedicated professionals driving our success.</p>
+            <h2 className="text-3xl font-bold text-primary animate-fade-in-down">Meet Our Leadership</h2>
+             <p className="mt-2 text-lg text-muted-foreground max-w-xl mx-auto animate-fade-in-down animation-delay-200">A glimpse of the dedicated professionals driving our success.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {keyTeamMembers.map(agent => (
-              <Card key={agent.id} className="text-center p-6 bg-card shadow-md hover:shadow-lg transition-shadow">
+            {keyTeamMembers.map((agent, index) => (
+              <Card 
+                key={agent.id} 
+                className={`text-center p-6 bg-card shadow-md transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-xl animate-fade-in-up`}
+                style={{ animationDelay: `${(index * 100) + 300}ms` }}
+              >
                  <Image src={agent.image} alt={agent.name} width={100} height={100} className="rounded-full mx-auto mb-4 border-2 border-accent" data-ai-hint={agent.dataAiHint || "professional person"}/>
                  <h3 className="text-lg font-semibold text-primary">{agent.name}</h3>
                  <p className="text-sm text-accent">{agent.title}</p>
@@ -89,7 +97,7 @@ export default function AboutPage() {
               </Card>
             ))}
           </div>
-          <div className="text-center mt-10">
+          <div className="text-center mt-10 animate-fade-in-up animation-delay-500">
             <Button asChild size="lg">
               <Link href="/agents">View All Agents</Link>
             </Button>

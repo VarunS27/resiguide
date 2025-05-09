@@ -12,7 +12,7 @@ interface PropertyCardProps {
 
 export function PropertyCard({ property }: PropertyCardProps) {
   return (
-    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full rounded-lg">
+    <Card className="group overflow-hidden shadow-lg flex flex-col h-full rounded-lg transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-2xl">
       <CardHeader className="p-0 relative">
         <Link href={`/properties/${property.id}`} className="block">
           <Image

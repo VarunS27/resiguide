@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+const plugin = require('tailwindcss/plugin')
 
 export default {
     darkMode: ["class"],
@@ -82,13 +83,43 @@ export default {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'fade-in-down': {
+          '0%': { opacity: '0', transform: 'translateY(-10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in': 'fade-in 0.5s ease-out forwards',
+        'fade-in-down': 'fade-in-down 0.5s ease-out forwards',
+        'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(function({ addUtilities }) {
+      addUtilities({
+        '.animation-delay-100': { 'animation-delay': '0.1s' },
+        '.animation-delay-200': { 'animation-delay': '0.2s' },
+        '.animation-delay-300': { 'animation-delay': '0.3s' },
+        '.animation-delay-400': { 'animation-delay': '0.4s' },
+        '.animation-delay-500': { 'animation-delay': '0.5s' },
+        '.animation-delay-600': { 'animation-delay': '0.6s' },
+        '.animation-delay-700': { 'animation-delay': '0.7s' },
+        '.animation-delay-800': { 'animation-delay': '0.8s' },
+        '.animation-delay-1000': { 'animation-delay': '1s' },
+      })
+    })
+  ],
 } satisfies Config;
