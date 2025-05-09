@@ -117,10 +117,10 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </Badge>
               </CardHeader>
               <CardContent className="animate-fade-in-up animation-delay-300">
-                <Button size="lg" className="w-full mb-2 transition-transform hover:scale-105 animate-button-pop" style={{animationDelay: '400ms'}}>
+                <Button size="lg" className="w-full mb-2 transition-transform hover:scale-105" style={{animationDelay: '400ms'}}>
                   <Mail className="mr-2 h-5 w-5" /> Inquire About Property
                 </Button>
-                <Button size="lg" variant="outline" className="w-full transition-transform hover:scale-105 animate-button-pop" style={{animationDelay: '500ms'}}>
+                <Button size="lg" variant="outline" className="w-full transition-transform hover:scale-105" style={{animationDelay: '500ms'}}>
                   <Phone className="mr-2 h-5 w-5" /> Schedule a Visit
                 </Button>
               </CardContent>
@@ -137,7 +137,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 <CardTitle className="text-xl text-primary">Location Map</CardTitle>
               </CardHeader>
               <CardContent>
-                 <div className="aspect-video bg-muted rounded-md flex items-center justify-center animate-pulse-once" style={{animationDelay: '700ms'}}>
+                 <div className="aspect-video bg-muted rounded-md flex items-center justify-center animate-pulse" style={{animationDelay: '700ms'}}>
                     <p className="text-muted-foreground">Map placeholder</p>
                  </div>
               </CardContent>
