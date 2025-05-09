@@ -2,11 +2,14 @@ import { ContactForm } from '@/components/contact-form';
 import { PageHeader } from '@/components/ui/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mail, Phone, MapPin } from 'lucide-react';
-import { CONTACT_EMAIL, CONTACT_PHONE, COMPANY_ADDRESS, SOCIAL_LINKS } from '@/lib/constants';
+import { CONTACT_EMAIL, CONTACT_PHONE, COMPANY_ADDRESS, SOCIAL_LINKS, APP_NAME } from '@/lib/constants';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export default function ContactPage() {
+  const encodedAddress = encodeURIComponent(COMPANY_ADDRESS);
+  const googleMapsEmbedUrl = `https://maps.google.com/maps?q=${encodedAddress}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
   return (
     <div className="bg-background min-h-screen">
       <PageHeader
@@ -20,8 +23,8 @@ export default function ContactPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-3 gap-12">
           {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-xl rounded-lg animate-fade-in-left">
+          <div className="lg:col-span-2 animate-fade-in-left animation-delay-0">
+            <Card className="shadow-xl rounded-lg">
               <CardHeader>
                 <CardTitle className="text-2xl text-primary">Send Us a Message</CardTitle>
               </CardHeader>
@@ -67,7 +70,7 @@ export default function ContactPage() {
                 <CardTitle className="text-xl text-primary">Connect With Us</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">Follow us on social media for the latest updates and listings.</p>
+                <p className="text-sm text-muted-foreground mb-4">Follow us on social media for the latest updates and listings from {APP_NAME}.</p>
                 <div className="flex space-x-3">
                   {SOCIAL_LINKS.map(link => (
                     <Button key={link.name} variant="outline" size="icon" asChild className="hover:border-accent hover:text-accent transition-all hover:scale-110">
@@ -85,8 +88,17 @@ export default function ContactPage() {
                 <CardTitle className="text-xl text-primary">Find Us Here</CardTitle>
               </CardHeader>
               <CardContent>
-                 <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
-                    <p className="text-muted-foreground">Google Maps placeholder</p>
+                 <div className="aspect-video rounded-md overflow-hidden border border-border">
+                    <iframe
+                        src={googleMapsEmbedUrl}
+                        width="100%"
+                        height="100%"
+                        style={{ border:0 }}
+                        allowFullScreen={false}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title={`Location of ${APP_NAME} office`}
+                    ></iframe>
                  </div>
               </CardContent>
             </Card>
