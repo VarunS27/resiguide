@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -6,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, MessageSquare, User, Loader2 } from 'lucide-react';
+import { Send, MessageSquare, User, Loader2, Mic, MicOff } from 'lucide-react';
 import { aiChatbotAssistant, type AIChatbotAssistantInput, type AIChatbotAssistantOutput } from '@/ai/flows/ai-chatbot-assistant';
 import { APP_NAME } from '@/lib/constants';
-import Image from 'next/image'; // Keep Image for potential future use, even if Avatars use picsum
+// import Image from 'next/image'; // Not strictly needed if AvatarImage handles src correctly
 
 interface Message {
   id: string;
@@ -30,6 +29,11 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
   const [aiAvatarUrl, setAiAvatarUrl] = useState('');
   const [userAvatarUrl, setUserAvatarUrl] = useState('');
 
+  // Voice input state
+  const [isListening, setIsListening] = useState(false);
+  const [browserSupportsSpeech, setBrowserSupportsSpeech] = useState(false);
+  const speechRecognitionRef = useRef<SpeechRecognition | null>(null);
+
   useEffect(() => {
     // Generate dynamic placeholder images only on the client
     setAiAvatarUrl('https://picsum.photos/seed/ai-avatar/40/40');
@@ -38,11 +42,51 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
     setMessages([
       {
         id: Date.now().toString(),
-        text: `Hello! I'm the ${APP_NAME} AI Assistant. How can I help you with your real estate questions or navigating our site today?`,
+        text: `Hello! I'm the ${APP_NAME} AI Assistant. How can I help you with your real estate questions or navigating our site today? You can also ask me about general property rates or rent prices in international locations (data provided is simulated). I can understand English, Hindi, and Gujarati. Try typing or using the microphone!`,
         sender: 'ai',
         timestamp: new Date(),
       }
     ]);
+
+    // Check for SpeechRecognition API support
+    const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognitionAPI) {
+      setBrowserSupportsSpeech(true);
+      const recognitionInstance = new SpeechRecognitionAPI();
+      recognitionInstance.continuous = false; // Stop after first utterance
+      recognitionInstance.interimResults = false;
+      // Attempt to set language for better accuracy, but LLM handles text processing for multilingual.
+      // User might need to ensure their browser/OS speech input language is set correctly for non-English.
+      recognitionInstance.lang = 'en-US'; // Defaulting to English for STT, LLM will handle text.
+
+      recognitionInstance.onresult = (event: SpeechRecognitionEvent) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+        // Optionally auto-send by creating a synthetic event
+        // const syntheticEvent = { preventDefault: () => {} } as React.FormEvent;
+        // handleSendMessage(syntheticEvent, transcript); 
+      };
+      recognitionInstance.onerror = (event: SpeechRecognitionErrorEvent) => {
+        console.error('Speech recognition error:', event.error);
+        // Provide user feedback for common errors
+        if (event.error === 'no-speech') {
+          // toast({ title: "No speech detected", description: "Please try speaking again."});
+        } else if (event.error === 'audio-capture') {
+          // toast({ title: "Microphone error", description: "Could not capture audio. Please check microphone permissions."});
+        } else if (event.error === 'not-allowed') {
+          // toast({ title: "Permission denied", description: "Microphone access was denied. Please enable it in your browser settings."});
+        }
+        setIsListening(false);
+      };
+      recognitionInstance.onend = () => {
+        setIsListening(false);
+      };
+      speechRecognitionRef.current = recognitionInstance;
+    } else {
+      setBrowserSupportsSpeech(false);
+      console.warn("Speech Recognition API not supported in this browser.");
+    }
   }, []);
 
 
@@ -56,29 +100,45 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
   }, [messages]);
   
 
-  const handleSendMessage = async (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent, messageTextParam?: string) => {
     e.preventDefault();
-    if (input.trim() === '' || isLoading) return;
+    const currentMessageText = messageTextParam || input;
+    if (currentMessageText.trim() === '' || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: input,
+      text: currentMessageText,
       sender: 'user',
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMessage]);
-    setInput('');
+    if (!messageTextParam) setInput(''); // Clear input only if not from voice auto-send
     setIsLoading(true);
 
     try {
-      const aiInput: AIChatbotAssistantInput = { query: userMessage.text };
+      let langHint = 'en'; // Default language hint
+      // Basic regex for Devanagari (Hindi) and Gujarati scripts
+      if (/[\u0900-\u097F]/.test(currentMessageText)) { // Devanagari range
+        langHint = 'hi';
+      } else if (/[\u0A80-\u0AFF]/.test(currentMessageText)) { // Gujarati range
+        langHint = 'gu';
+      }
+
+      const aiInput: AIChatbotAssistantInput = { query: userMessage.text, userLanguageHint: langHint };
       const aiOutput: AIChatbotAssistantOutput = await aiChatbotAssistant(aiInput);
       
       let aiResponseText = aiOutput.response;
       if (aiOutput.isRelevant && aiOutput.guidance) {
-        aiResponseText = `${aiOutput.response}\n\n${aiOutput.guidance}`;
+        const guidanceText = aiOutput.guidance.trim();
+        const responseText = aiOutput.response.trim();
+        if (responseText && guidanceText) {
+            aiResponseText = `${responseText}\n\n${guidanceText}`;
+        } else if (responseText) {
+            aiResponseText = responseText;
+        } else { // Only guidance
+            aiResponseText = guidanceText;
+        }
       } else if (!aiOutput.isRelevant) {
-        // The response should already be a polite refusal if not relevant, as per the prompt.
         aiResponseText = aiOutput.response;
       }
 
@@ -101,6 +161,26 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleToggleListening = () => {
+    if (!browserSupportsSpeech || !speechRecognitionRef.current) {
+      // toast({ title: "Voice input not supported", description: "Your browser does not support speech recognition."});
+      return;
+    }
+    if (isListening) {
+      speechRecognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        speechRecognitionRef.current.start();
+        setIsListening(true);
+      } catch (error) {
+        console.error("Error starting speech recognition:", error);
+        // toast({ title: "Could not start voice input", description: "Please ensure microphone permissions are granted."});
+        setIsListening(false);
+      }
     }
   };
 
@@ -173,12 +253,26 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask a question..."
+          placeholder={isListening ? "Listening..." : "Ask a question..."}
           className="flex-grow h-10" 
-          disabled={isLoading}
+          disabled={isLoading || isListening}
           aria-label="Chat input"
         />
-        <Button type="submit" size="icon" className="h-10 w-10" disabled={isLoading || input.trim() === ''}>
+        {browserSupportsSpeech && (
+          <Button 
+            type="button" 
+            size="icon" 
+            variant={isListening ? "destructive" : "outline"}
+            className="h-10 w-10 flex-shrink-0" 
+            onClick={handleToggleListening}
+            disabled={isLoading} // Keep disabled if main form is loading
+            aria-label={isListening ? "Stop listening" : "Start voice input"}
+            title={isListening ? "Stop listening" : "Start voice input"}
+          >
+            {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+          </Button>
+        )}
+        <Button type="submit" size="icon" className="h-10 w-10 flex-shrink-0" disabled={isLoading || input.trim() === '' || isListening}>
           {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
           <span className="sr-only">Send Message</span>
         </Button>
@@ -186,4 +280,3 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
     </div>
   );
 }
-
