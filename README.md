@@ -1,5 +1,5 @@
-# Firebase Studio
+# Resi Guide
 
-This is a NextJS starter in Firebase Studio.
+This is a Real Estate website built with Next.js and Tailwind CSS.
 
-To get started, take a look at src/app/page.tsx.
+Let's get started 
