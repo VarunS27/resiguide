@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, MessageSquare, User, Loader2, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { Send, MessageSquare, User, Loader2, Mic, MicOff } from 'lucide-react';
 import { aiChatbotAssistant, type AIChatbotAssistantInput, type AIChatbotAssistantOutput } from '@/ai/flows/ai-chatbot-assistant';
 import { APP_NAME } from '@/lib/constants';
 import { useToast } from '@/hooks/use-toast';
@@ -36,17 +36,6 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
   const [browserSupportsSpeech, setBrowserSupportsSpeech] = useState(false);
   const speechRecognitionRef = useRef<SpeechRecognition | null>(null);
 
-  // TTS state
-  const [isTTSEnabled, setIsTTSEnabled] = useState(true);
-  const [browserSupportsTTS, setBrowserSupportsTTS] = useState(false);
-
-  const mapLanguageToCode = (langName: string): string => {
-    const lowerLangName = langName.toLowerCase();
-    if (lowerLangName.includes('hindi')) return 'hi-IN';
-    if (lowerLangName.includes('gujarati')) return 'gu-IN';
-    if (lowerLangName.includes('english')) return 'en-US';
-    return 'en-US'; // Default
-  };
 
   useEffect(() => {
     // Generate dynamic placeholder images only on the client
@@ -96,23 +85,8 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
       setBrowserSupportsSpeech(false);
       console.warn("Speech Recognition API not supported in this browser.");
     }
-
-    // Check for SpeechSynthesis API support
-    if ('speechSynthesis' in window) {
-        setBrowserSupportsTTS(true);
-    } else {
-        setBrowserSupportsTTS(false);
-        console.warn("Speech Synthesis API not supported in this browser.");
-    }
     
-    // Cleanup speech synthesis on component unmount
-    return () => {
-        if (browserSupportsTTS && window.speechSynthesis.speaking) {
-            window.speechSynthesis.cancel();
-        }
-    };
-
-  }, [toast, browserSupportsTTS]);
+  }, [toast]);
 
 
   useEffect(() => {
@@ -124,34 +98,6 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
     }
   }, [messages]);
   
-
-  const speakText = (text: string, lang: string) => {
-    if (!isTTSEnabled || !browserSupportsTTS || !text) return;
-
-    // Cancel any ongoing speech
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = mapLanguageToCode(lang);
-    
-    // Find a voice that matches the language
-    const voices = window.speechSynthesis.getVoices();
-    const selectedVoice = voices.find(voice => voice.lang === utterance.lang) || voices.find(voice => voice.lang.startsWith(utterance.lang.split('-')[0]));
-    
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-    } else {
-      console.warn(`No voice found for language: ${utterance.lang}. Using default.`);
-    }
-
-    utterance.onerror = (event) => {
-      console.error('Speech synthesis error:', event.error);
-      toast({ title: "Speech Error", description: `Could not play audio for language ${lang}.`, variant: "destructive" });
-    };
-    window.speechSynthesis.speak(utterance);
-  };
 
   const handleSendMessage = async (e: React.FormEvent, messageTextParam?: string) => {
     e.preventDefault();
@@ -168,11 +114,6 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
     if (!messageTextParam) setInput('');
     setIsLoading(true);
     
-    // Cancel any speech before sending new message
-    if (browserSupportsTTS && window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-    }
-
     try {
       let langHint = 'en'; 
       if (/[\u0900-\u097F]/.test(currentMessageText)) langHint = 'hi';
@@ -194,10 +135,6 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
       };
       setMessages((prev) => [...prev, aiMessage]);
 
-      if (aiMessage.text) {
-        speakText(aiMessage.text, aiOutput.detectedLanguage || 'English');
-      }
-
     } catch (error) {
       console.error('Error calling AI assistant:', error);
       const errorText = "I'm sorry, I encountered an error trying to respond. Please try again later.";
@@ -208,7 +145,6 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
-      speakText(errorText, 'English'); // Speak the error message in English
     } finally {
       setIsLoading(false);
     }
@@ -219,19 +155,12 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
       toast({ title: "Voice input not supported", description: "Your browser does not support speech recognition."});
       return;
     }
-    // Cancel TTS if user starts speaking
-    if (browserSupportsTTS && window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-    }
 
     if (isListening) {
       speechRecognitionRef.current.stop();
       setIsListening(false);
     } else {
       try {
-        // Try to set language based on common UI patterns or a future language selector
-        // For now, we rely on the browser's default or user's OS setting.
-        // speechRecognitionRef.current.lang = selectedSttLang; // e.g. 'hi-IN', 'gu-IN'
         speechRecognitionRef.current.start();
         setIsListening(true);
       } catch (error: any) {
@@ -244,18 +173,6 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
     }
   };
 
-  const handleToggleTTS = () => {
-    if (!browserSupportsTTS) {
-        toast({ title: "Speech Not Supported", description: "Your browser does not support text-to-speech.", variant: "destructive"});
-        return;
-    }
-    const newTTSEnabledState = !isTTSEnabled;
-    setIsTTSEnabled(newTTSEnabledState);
-    if (!newTTSEnabledState && window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel(); // Stop speech if TTS is disabled
-    }
-    toast({ title: `Speech ${newTTSEnabledState ? "Enabled" : "Disabled"}` });
-  };
 
   const containerClass = variant === 'widget'
     ? "flex flex-col h-full"
@@ -273,19 +190,6 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
             <MessageSquare className="h-6 w-6 mr-2" />
             <h2 className="text-lg font-semibold">AI Real Estate Assistant</h2>
           </div>
-          {browserSupportsTTS && (
-            <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={handleToggleTTS}
-                className="text-primary-foreground hover:bg-primary/80 h-8 w-8"
-                aria-label={isTTSEnabled ? "Disable Text-to-Speech" : "Enable Text-to-Speech"}
-                title={isTTSEnabled ? "Disable Text-to-Speech" : "Enable Text-to-Speech"}
-            >
-                {isTTSEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
-            </Button>
-          )}
         </header>
       )}
 
@@ -364,19 +268,6 @@ export function ChatInterface({ variant = 'page' }: ChatInterfaceProps) {
           {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
           <span className="sr-only">Send Message</span>
         </Button>
-        {variant === 'widget' && browserSupportsTTS && (
-             <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onClick={handleToggleTTS}
-                className="h-10 w-10 flex-shrink-0"
-                aria-label={isTTSEnabled ? "Disable Text-to-Speech" : "Enable Text-to-Speech"}
-                title={isTTSEnabled ? "Disable Text-to-Speech" : "Enable Text-to-Speech"}
-            >
-                {isTTSEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
-            </Button>
-        )}
       </form>
     </div>
   );
