@@ -43,7 +43,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <span className="truncate">{property.location}</span>
         </div>
         <p className="text-md md:text-lg font-bold text-primary mb-3"> {/* Responsive font size */}
-          ${property.price.toLocaleString()} {property.type === 'Rent' ? <span className="text-xs font-normal">/month</span> : ''}
+          ₹{property.price.toLocaleString()} {property.type === 'Rent' ? <span className="text-xs font-normal">/month</span> : ''}
         </p>
         <div className="grid grid-cols-3 gap-2 text-xs sm:text-sm text-muted-foreground mb-3"> {/* Responsive font size */}
           <div className="flex items-center truncate">

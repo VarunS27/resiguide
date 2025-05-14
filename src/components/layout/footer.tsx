@@ -83,7 +83,7 @@ export function Footer() {
         <Separator className="my-8 bg-border/50 animate-fade-in animation-delay-800" />
 
         <div className="text-center text-xs animate-fade-in-up animation-delay-900">
-          <p>&copy; {year} {APP_NAME}. All rights reserved. Designed with elegance.</p>
+          <p>&copy; {year} {APP_NAME}. All rights reserved. Designed & Developed with elegance By Vardhman Tech Services.</p>
         </div>
       </div>
     </footer>

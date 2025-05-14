@@ -111,7 +111,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
             <Card className="shadow-xl rounded-lg animate-fade-in-right animation-delay-300">
               <CardHeader>
                 <CardTitle className="text-2xl text-accent animate-pop-in animation-delay-400">
-                  ${property.price.toLocaleString()}
+                  ₹{property.price.toLocaleString()}
                   {property.type === 'Rent' && <span className="text-base font-normal text-muted-foreground">/month</span>}
                 </CardTitle>
                 <Badge variant={property.type === 'Sale' ? 'default' : 'secondary'} className="w-fit mt-1 animate-fade-in-up animation-delay-500">

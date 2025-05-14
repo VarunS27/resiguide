@@ -20,8 +20,8 @@ export const SOCIAL_LINKS: SocialLink[] = [
 ];
 
 export const CONTACT_EMAIL = "contact@resiguide.com";
-export const CONTACT_PHONE = "+1 (555) 123-4567";
-export const COMPANY_ADDRESS = "123 Luxury Lane, Real Estate City, CA 90210";
+export const CONTACT_PHONE = "+91 9228869697";
+export const COMPANY_ADDRESS = "New Link rouad, Andheri West, 400053";
 
 
 export const DUMMY_PROPERTIES: Property[] = [
